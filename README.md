@@ -11,3 +11,7 @@
 ### Viết Hàm giải phương trình bậc hai, Hàm phát video (playVideo), Hàm phát nhạc (playAudio)
 ### bước 3: viết phần xử lý logic và các hàm trong app 
 ![image](https://github.com/user-attachments/assets/12de6637-1854-4c1b-af39-6ab8f85510de)
+![image](https://github.com/user-attachments/assets/446ca625-b184-46eb-9ce8-27e27372aa0d)
+### kết quả: ![image](https://github.com/user-attachments/assets/5170c3d7-72d6-4210-bb28-d9d67454b8ef)
+
+
