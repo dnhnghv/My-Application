@@ -1,64 +1,84 @@
-
 package com.example.myapplication;
 
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.webkit.JavascriptInterface;
-
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private WebView webView;
-    private MediaPlayer mediaPlayerMp3, mediaPlayerMp4;
+    private MediaPlayer mediaPlayer;
+    private VideoView videoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Khởi tạo WebView
-        webView = findViewById(R.id.webview);
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+        EditText inputA = findViewById(R.id.inputA);
+        EditText inputB = findViewById(R.id.inputB);
+        EditText inputC = findViewById(R.id.inputC);
+        Button solveButton = findViewById(R.id.solveButton);
+        TextView resultView = findViewById(R.id.resultView);
+        Button playAudioButton = findViewById(R.id.playAudioButton);
+        Button playVideoButton = findViewById(R.id.playVideoButton);
+        videoView = findViewById(R.id.videoView);
 
-        // Cấu hình WebView
-        webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl("file:///android_asset/index.html");
+        // Bắt sự kiện giải phương trình bậc hai
+        solveButton.setOnClickListener(v -> {
+            try {
+                double a = Double.parseDouble(inputA.getText().toString());
+                double b = Double.parseDouble(inputB.getText().toString());
+                double c = Double.parseDouble(inputC.getText().toString());
+                resultView.setText(solveQuadratic(a, b, c));
+            } catch (Exception e) {
+                resultView.setText("Lỗi nhập liệu!");
+            }
+        });
 
-        // Tạo bridge để giao tiếp với JavaScript
-        webView.addJavascriptInterface(new WebAppInterface(), "Android");
+        // Bắt sự kiện phát âm thanh
+        playAudioButton.setOnClickListener(v -> {
+            if (mediaPlayer == null) {
+                mediaPlayer = MediaPlayer.create(this, R.raw.audio);
 
-        // Khởi tạo MediaPlayer
-        mediaPlayerMp3 = MediaPlayer.create(this, R.raw.audio);
-        mediaPlayerMp4 = MediaPlayer.create(this, R.raw.video);
+            }
+            mediaPlayer.start();
+        });
+
+        // Bắt sự kiện phát video
+        playVideoButton.setOnClickListener(v -> {
+            videoView.setVisibility(View.VISIBLE);
+            String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.video;
+            videoView.setVideoURI(Uri.parse(videoPath));
+            videoView.start();
+        });
     }
 
-    public class WebAppInterface {
-        @JavascriptInterface
-        public void playMp3() {
-            if (mediaPlayerMp3 != null) {
-                mediaPlayerMp3.start();
-            }
-        }
-
-        @JavascriptInterface
-        public void playMp4() {
-            if (mediaPlayerMp4 != null) {
-                mediaPlayerMp4.start();
-            }
-        }
-
-        @JavascriptInterface
-        public void generateOtp(JavascriptCallback callback) {
-            int otp = (int) (Math.random() * 900000) + 100000;
-            callback.onCallback(String.valueOf(otp));
+    // Phương thức giải phương trình bậc hai
+    private String solveQuadratic(double a, double b, double c) {
+        double delta = b * b - 4 * a * c;
+        if (delta > 0) {
+            double x1 = (-b + Math.sqrt(delta)) / (2 * a);
+            double x2 = (-b - Math.sqrt(delta)) / (2 * a);
+            return "Nghiệm x1 = " + x1 + ", x2 = " + x2;
+        } else if (delta == 0) {
+            double x = -b / (2 * a);
+            return "Nghiệm kép x = " + x;
+        } else {
+            return "Phương trình vô nghiệm!";
         }
     }
 
-    public interface JavascriptCallback {
-        void onCallback(String otp);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 }
