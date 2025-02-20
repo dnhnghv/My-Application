@@ -5,5 +5,7 @@
 ## Nội Dung: Thiết Kế một app đơn giản trên android studio có thể giải phương trình bậc 2, phát một file Mp3, Video..
 ## Các bước thực hiện:
 ### bước 1 Tạo một app có tên là my application, chọn ngôn ngữ java
-### bước 2 thiết kế giao diện cho app: kéo các label; texbox; button để phát file mp3, video, giải phương trình, videoView: Thành phần để phát video; mediaPlayer: Đối tượng dùng để phát nhạc.
+### bước 2 thiết kế giao diện cho app: kéo các label; TextView; button để phát file mp3, video, giải phương trình, videoView: Thành phần để phát video; mediaPlayer: Đối tượng dùng để phát nhạc.
 ![image](https://github.com/user-attachments/assets/e0b9bc2f-04a6-4c31-b609-b3487a8e60a4)
+### Gọi setContentView(R.layout.activity_main); để gán giao diện activity_main.xml vào activity.Ánh xạ các thành phần từ XML sang Java bằng findViewById().Gán sự kiện cho các nút bấm bằng setOnClickListener().
+### Viết Hàm giải phương trình bậc hai, Hàm phát video (playVideo), Hàm phát nhạc (playAudio)
